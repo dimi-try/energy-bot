@@ -1,8 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config();
 
-const token = '<your-telegram-key>';
-const webAppUrl = "<your-webapp-url>";
-const bot = new TelegramBot(token, {polling: true});
+const TOKEN = process.env.TOKEN
+const WEB_APP_URL = process.env.WEB_APP_URL
+const bot = new TelegramBot(TOKEN, {polling: true});
 
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
@@ -12,7 +13,7 @@ bot.on('message', async (msg) => {
     await bot.sendMessage(chatId, 'Hello', {
         reply_markup: {
             inline_keyboard: [
-                [{text: 'Форма', web_app: {url: webAppUrl}}]
+                [{text: 'Форма', web_app: {url: WEB_APP_URL}}]
             ]
         }
     })
