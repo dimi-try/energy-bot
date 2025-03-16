@@ -9,8 +9,8 @@ const TOKEN = process.env.TOKEN;                       // Токен бота, �
 const WEB_APP_URL = process.env.WEB_APP_URL;           // URL фронтенда для кнопки в Telegram
 const WEBHOOK_URL = process.env.WEBHOOK_URL;           // URL для вебхука (публичный доступ к серверу)
 
-// Создаем экземпляр бота, но не используем polling, а настроим вебхук
-const bot = new TelegramBot(TOKEN);
+// Создаем экземпляр бота с настройкой вебхука (без polling)
+const bot = new TelegramBot(TOKEN, { webHook: { port: process.env.PORT || 8080 } });
 
 // Создаем сервер с помощью Express
 const app = express();
@@ -18,33 +18,25 @@ app.use(bodyParser.json());  // Используем body-parser для обра
 
 // Функция для установки вебхука с помощью Telegram API
 async function setWebhook() {
-  // Формируем URL для установки вебхука в Telegram API
-  const url = `https://api.telegram.org/bot${TOKEN}/setWebhook?url=${WEBHOOK_URL}`;
-  
   try {
-    // Отправляем запрос на установку вебхука
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.ok) {
-      console.log('Webhook успешно установлен');
-    } else {
-      console.log('Ошибка при установке вебхука:', data.description);
-    }
+    await bot.setWebHook(WEBHOOK_URL); // Устанавливаем вебхук
+    console.log('Webhook успешно установлен');
   } catch (err) {
-    console.error('Ошибка при подключении к Telegram API:', err);
+    console.error('Ошибка при установке вебхука:', err);
   }
 }
 
 // Обрабатываем входящие сообщения через вебхук
 app.post('/webhook', async (req, res) => {
-  // Получаем данные из запроса, который прислал Telegram
-  const msg = req.body;
-  
-  const chatId = msg.message.chat.id;  // ID чата, куда бот будет отправлять сообщение
-  const text = msg.message.text;       // Текст сообщения, которое пришло от пользователя
+  bot.processUpdate(req.body); // Передаем полученные данные боту для обработки
+  res.sendStatus(200); // Telegram должен получить 200 OK
+});
 
-  // Если сообщение равно "/start", отправляем приветственное сообщение
+// Обработчик сообщений от Telegram
+bot.on('message', async (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text;
+
   if (text === "/start") {
     await bot.sendMessage(chatId, 'Привет, тут ты увидишь много разных энчиков! Жми на ссылку ниже!', {
       reply_markup: {
@@ -54,16 +46,13 @@ app.post('/webhook', async (req, res) => {
       }
     });
   }
-
-  // Отправляем ответ Telegram, чтобы он знал, что запрос обработан
-  res.send('OK');
 });
 
 // Устанавливаем вебхук при старте сервера
 setWebhook();
 
-// Запускаем сервер
-const PORT = process.env.PORT || 8080;  // Указываем порт для сервера, по умолчанию 8080
+// Запускаем сервер Express
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);  // Лог для проверки, что сервер запустился
+  console.log(`Server is running on port ${PORT}`);
 });
