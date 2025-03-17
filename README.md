@@ -31,13 +31,6 @@ energy-bot/
 ### 📋 Настройка .env  
 Скопируйте `.env.sample`, переименуйте в `.env` и добавьте свои данные.
 
-Пример `.env` файла:
-```env
-TOKEN=your_telegram_bot_token
-WEB_APP_URL=https://your-web-app-url
-WEBHOOK_URL=https://your-bot-webhook-url
-```
-
 ### 📥 Установка зависимостей  
 ```sh
 npm install
