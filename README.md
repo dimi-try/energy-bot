@@ -13,9 +13,6 @@ energy-bot/
 │
 ├── src/
 │   ├── index.js          # Основной файл бота
-│   ├── config.js         # Конфигурация приложения (API, Webhook URL)
-│   ├── bot.js            # Логика работы бота
-│   ├── webhook.js        # Обработка вебхуков Telegram
 │
 ├── .env.sample           # Пример файла с переменными окружения
 ├── .gitignore            # Игнорируемые файлы
