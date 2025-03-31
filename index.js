@@ -38,7 +38,7 @@ bot.on('message', async (msg) => {
   const text = msg.text;
 
   // Проверяем команду /start
-  if (text === '/start') {
+  if (text == '/start') {
     try {
       // Отправляем приветственное сообщение с кнопкой
       await bot.sendMessage(chatId, 'Добро пожаловать в топ энергетиков!', {
