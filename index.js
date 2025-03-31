@@ -67,9 +67,9 @@ bot.on('message', async (msg) => {
 });
 
 // Устанавливаем вебхук при запуске
-bot.setWebHook(`${SERVER_URL}`).then(() => {
+bot.setWebHook(`${SERVER_URL}/bot${TOKEN}`).then(() => {
   // Логируем успешную установку вебхука
-  console.log(`Вебхук установлен на ${SERVER_URL} /bot${TOKEN}`);
+  console.log(`Вебхук установлен на ${SERVER_URL}/bot${TOKEN}`);
 }).catch((error) => {
   // Логируем ошибку установки вебхука
   console.error('Ошибка установки вебхука:', error);
