@@ -13,6 +13,8 @@ const WEB_APP_URL = process.env.WEB_APP_URL;
 const SERVER_URL = process.env.SERVER_URL;
 // Задаем порт, на котором будет работать сервер внутри контейнера
 const PORT = process.env.PORT;
+// Получаем имя бота из переменной окружения
+const BOT_USERNAME = process.env.BOT_USERNAME;
 
 // Создаем экземпляр Express-сервера
 const app = express();
@@ -30,6 +32,17 @@ app.post(`/bot${TOKEN}`, (req, res) => {
   res.sendStatus(200);
 });
 
+// Функция проверки, есть ли бот в группе
+async function isBotInChat(chatId) {
+  try {
+    const chatMember = await bot.getChatMember(chatId, bot.botInfo.id);
+    return chatMember.status !== 'kicked' && chatMember.status !== 'left';
+  } catch (error) {
+    console.error('Ошибка при проверке бота в группе:', error);
+    return false;
+  }
+}
+
 // Обрабатываем входящие сообщения
 bot.on('message', async (msg) => {
   // Извлекаем ID чата из сообщения
@@ -37,8 +50,17 @@ bot.on('message', async (msg) => {
   // Извлекаем текст сообщения
   const text = msg.text;
 
+  // Проверяем, есть ли бот в группе
+  if (msg.chat.type === 'group' || msg.chat.type === 'supergroup') {
+    const inChat = await isBotInChat(chatId);
+    if (!inChat) {
+      console.log('Бот исключён из группы, игнорируем сообщение.');
+      return;
+    }
+  }
+
   // Проверяем команду /start
-  if (text == '/start') {
+  if (text === '/start') {
     try {
       // Отправляем приветственное сообщение с кнопкой
       await bot.sendMessage(chatId, 'Добро пожаловать в топ энергетиков!', {
@@ -56,6 +78,15 @@ bot.on('message', async (msg) => {
   }
   // Поддержка групп и супергрупп
   else if (msg.chat.type === 'group' || msg.chat.type === 'supergroup') {
+    // Проверяем упоминание бота
+    if (text.includes(`@${BOT_USERNAME}`)) {
+      try {
+        // Отправляем ответ на упоминание
+        await bot.sendMessage(chatId, 'Я здесь! Как могу помочь? 🤖');
+      } catch (error) {
+        console.error('Ошибка при ответе на упоминание:', error);
+      }
+    }
     try {
       // Отправляем сообщение в группу
       await bot.sendMessage(chatId, 'Я работаю и в группах!');
