@@ -94,11 +94,11 @@ bot.on('message', async (msg) => {
   if (text === '/start') {
     try {
       // Отправляем приветственное сообщение с кнопкой
-      await bot.sendMessage(chatId, 'Добро пожаловать в топ энергетиков!', {
+      await bot.sendMessage(chatId, 'Привет, тут ты увидишь много разных энчиков! Жми на кнопку ниже!', {
         reply_markup: {
           inline_keyboard: [
             // Кнопка с текстом "Мини-Приложение" и ссылкой на Web App
-            [{ text: 'Мини-Приложение', web_app: { url: FRONTEND_URL } }]
+            [{ text: 'Открыть Топ энергетиков', web_app: { url: FRONTEND_URL } }]
           ]
         }
       });
