@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  bot:
+    build:
+      context: .
+    image: ${DOCKER_USERNAME}/energy-charts-bot:latest
