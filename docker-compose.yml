@@ -3,4 +3,4 @@ services:
   bot:
     build:
       context: .
-    image: ${DOCKER_USERNAME}/energy-charts-bot:latest
+    image: ${DOCKER_HUB_USER}/energy-charts-bot:latest
