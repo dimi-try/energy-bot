@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 2000
 
 # Команда для запуска приложения
-CMD ["node", "app/index.js"]
+CMD ["node", "src/index.js"]
