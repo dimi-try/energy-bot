@@ -94,36 +94,17 @@ bot.on('message', async (msg) => {
   if (text === '/start') {
     try {
       // Отправляем приветственное сообщение с кнопкой
-      await bot.sendMessage(chatId, 'Привет, тут ты увидишь много разных энчиков (DEMO)! Жми на кнопку ниже!', {
+      await bot.sendMessage(chatId, 'Привет, тут ты увидишь много разных энчиков и отзывов к ним! Также можно оставлять отзывы прямо тут в приложении! Скорее жми на кнопку ниже!', {
         reply_markup: {
           inline_keyboard: [
             // Кнопка с текстом "Мини-Приложение" и ссылкой на Web App
-            [{ text: 'Открыть Топ энергетиков  (DEMO)', web_app: { url: FRONTEND_URL } }]
+            [{ text: 'Открыть Топ энергетиков', web_app: { url: FRONTEND_URL } }]
           ]
         }
       });
     } catch (error) {
       // Логируем ошибку, если отправка не удалась
       console.error('Ошибка отправки сообщения:', error);
-    }
-  }
-  // Поддержка групп и супергрупп
-  else if (msg.chat.type === 'group' || msg.chat.type === 'supergroup') {
-    // Проверяем упоминание бота
-    if (text.includes(`@${BOT_USERNAME}`)) {
-      try {
-        // Отправляем ответ на упоминание
-        await bot.sendMessage(chatId, 'Я здесь! Как могу помочь? (DEMO)');
-      } catch (error) {
-        console.error('Ошибка при ответе на упоминание:', error);
-      }
-    }
-    try {
-      // Отправляем сообщение в группу
-      await bot.sendMessage(chatId, 'Я работаю и в группах! (DEMO)');
-    } catch (error) {
-      // Логируем ошибку для групп
-      console.error('Ошибка в группе:', error);
     }
   }
 });
